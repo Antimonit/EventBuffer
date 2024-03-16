@@ -6,3 +6,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.test)
     implementation(libs.junit4)
 }
+
+kover {
+    disable()
+}
