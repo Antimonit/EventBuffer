@@ -1,3 +1,7 @@
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![CircleCI](https://img.shields.io/circleci/build/gh/Antimonit/EventBuffer?label=CircleCI)](https://circleci.com/gh/Antimonit/EventBuffer)
+[![codecov](https://codecov.io/gh/Antimonit/EventBuffer/graph/badge.svg?token=XIGVGMYYQT)](https://codecov.io/gh/Antimonit/EventBuffer)
+
 # EventBuffer
 
 Conceptually similar to `SingleLiveEvent`, `EventBuffer` delivers events across the
