@@ -16,4 +16,12 @@ dependencies {
     testImplementation(libs.strikt)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.arch.core.testing)
+
+    androidTestImplementation(libs.junit4)
+    androidTestImplementation(libs.test.runner)
+    androidTestImplementation(libs.test.ext.junit)
+    androidTestImplementation(libs.strikt)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.lifecycle.livedata)
+    androidTestImplementation(libs.fragment.testing)
 }
