@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@4.0.1
+
 jobs:
   build:
     docker:
@@ -11,6 +14,9 @@ jobs:
     steps:
       - checkout
       - run: ./gradlew check
+      - run: ./gradlew koverXmlReport
+      - codecov/upload:
+          file: build/reports/kover/report.xml
 
 workflows:
   test:
