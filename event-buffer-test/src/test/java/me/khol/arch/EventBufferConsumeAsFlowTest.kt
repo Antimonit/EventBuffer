@@ -1,7 +1,7 @@
 package me.khol.arch
 
 import app.cash.turbine.test
-import app.cash.turbine.testIn
+import app.cash.turbine.turbineScope
 import me.khol.test.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -41,11 +41,13 @@ class EventBufferConsumeAsFlowTest {
         val events = MutableEventBuffer<Unit>()
         val flow = events.consumeAsFlow()
 
-        val turbine1 = flow.testIn(backgroundScope)
-        val turbine2 = flow.testIn(backgroundScope)
+        turbineScope {
+            val turbine1 = flow.testIn(backgroundScope)
+            val turbine2 = flow.testIn(backgroundScope)
 
-        events.send(Unit)
-        expectThat(turbine1.awaitItem()).isEqualTo(Unit)
-        expectThat(turbine2.awaitError()).isA<MultipleConcurrentCollectorsException>()
+            events.send(Unit)
+            expectThat(turbine1.awaitItem()).isEqualTo(Unit)
+            expectThat(turbine2.awaitError()).isA<MultipleConcurrentCollectorsException>()
+        }
     }
 }
