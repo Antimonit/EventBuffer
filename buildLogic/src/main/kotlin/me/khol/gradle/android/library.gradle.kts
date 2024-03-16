@@ -5,6 +5,7 @@ import me.khol.gradle.Const
 plugins {
     id("com.android.library")
     kotlin("android")
+    id("me.khol.gradle.kover.android")
 }
 
 android {
