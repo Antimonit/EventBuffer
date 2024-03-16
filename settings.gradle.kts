@@ -4,6 +4,7 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    includeBuild("buildLogic")
 }
 
 dependencyResolutionManagement {
@@ -13,3 +14,11 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+rootProject.name = "EventBuffer"
+
+include(":event-buffer-core")
+include(":event-buffer-test")
+include(":internal:test")

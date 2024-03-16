@@ -1,0 +1,32 @@
+[versions]
+android = "8.2.2"
+kotlin = "1.9.10"
+
+arch-core = "2.2.0"
+lifecycle = "2.7.0"
+
+kotlinx-coroutines = "1.7.3"
+
+junit4 = "4.13.2"
+strikt = "0.34.1"
+turbine = "0.8.0"
+
+[libraries]
+plugin-android = { module = "com.android.tools.build:gradle", version.ref = "android" }
+plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+
+arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "arch-core" }
+lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "lifecycle" }
+lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+
+junit4 = { module = "junit:junit", version.ref = "junit4" }
+strikt = { module = "io.strikt:strikt-core", version.ref = "strikt" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android" }
+android-library = { id = "com.android.library", version.ref = "android" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
