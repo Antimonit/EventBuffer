@@ -54,7 +54,7 @@ fun <T> MutableEventBuffer(): MutableEventBuffer<T> = AtomicEventBuffer()
 
 private class AtomicEventBuffer<Event> : MutableEventBuffer<Event> {
 
-    private val _exceptions = Channel<Event>(
+    private val _events = Channel<Event>(
         capacity = Channel.BUFFERED,
         onBufferOverflow = BufferOverflow.SUSPEND,
     )
@@ -67,7 +67,7 @@ private class AtomicEventBuffer<Event> : MutableEventBuffer<Event> {
     // Furthermore, [consumeAsFlow] causes exceptions thrown on the consumer's side to
     // cancel the channel. With [receiveAsFlow], we have a guarantee that:
     // > Failure or cancellation of the flow collector does not affect the channel.
-    private val exceptions = _exceptions.receiveAsFlow()
+    private val events = _events.receiveAsFlow()
 
     // No need for synchronization primitives as we are already synchronized by the main
     // dispatcher.
@@ -88,7 +88,7 @@ private class AtomicEventBuffer<Event> : MutableEventBuffer<Event> {
             if (isCollecting) throw MultipleConcurrentCollectorsException()
             try {
                 isCollecting = true
-                exceptions.collect(collector)
+                events.collect(collector)
             } finally {
                 isCollecting = false
             }
@@ -111,7 +111,7 @@ private class AtomicEventBuffer<Event> : MutableEventBuffer<Event> {
         //
         // See `collect` for details.
         withContext(Dispatchers.Main) {
-            _exceptions.send(event)
+            _events.send(event)
         }
     }
 }
