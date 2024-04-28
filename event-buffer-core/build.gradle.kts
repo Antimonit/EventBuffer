@@ -1,5 +1,6 @@
 plugins {
     id("me.khol.gradle.android.library")
+    id("me.khol.gradle.publish.android")
 }
 
 android {
