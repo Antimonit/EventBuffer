@@ -1,6 +1,6 @@
 [versions]
 android = "8.5.0"
-kotlin = "1.9.24"
+kotlin = "2.0.0"
 kover = "0.7.6"
 
 arch-core = "2.2.0"
