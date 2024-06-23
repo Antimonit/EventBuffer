@@ -1,10 +1,17 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     id("me.khol.gradle.android.library")
     id("me.khol.gradle.publish.android")
+    id("com.vanniktech.maven.publish") version "0.28.0"
 }
 
 android {
     namespace = "me.khol.arch"
+}
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 }
 
 dependencies {
