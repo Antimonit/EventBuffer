@@ -6,7 +6,7 @@ kover = "0.8.1"
 arch-core = "2.2.0"
 fragment = "1.8.0"
 lifecycle = "2.8.2"
-test-runner = "1.5.2"
+test-runner = "1.6.0"
 test-ext-junit = "1.2.0"
 
 kotlinx-coroutines = "1.8.1"
