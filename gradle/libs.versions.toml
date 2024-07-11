@@ -1,5 +1,5 @@
 [versions]
-android = "8.5.0"
+android = "8.5.1"
 kotlin = "2.0.0"
 kover = "0.8.1"
 
