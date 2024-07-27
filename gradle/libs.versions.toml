@@ -7,7 +7,7 @@ arch-core = "2.2.0"
 fragment = "1.8.2"
 lifecycle = "2.8.4"
 test-runner = "1.6.1"
-test-ext-junit = "1.2.0"
+test-ext-junit = "1.2.1"
 
 kotlinx-coroutines = "1.8.1"
 
