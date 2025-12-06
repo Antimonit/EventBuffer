@@ -10,6 +10,8 @@ View–ViewModel boundary.
 Unlike `SingleLiveEvent`, however, `EventBuffer` guarantees that each event is consumed **once and
 only once**.
 
+<img src="images/EventBuffer.webp" width="680" alt="Marble diagram of EventBuffer" />
+
 ## Issues with SingleLiveEvent
 
 Though `LiveData` is quite reliable as a stream of **states** in the Android world, it cannot
@@ -49,6 +51,8 @@ updated again.
 
 </details>
 
+<img src="images/SingleLiveEvent-2.webp" width="440" alt="Marble diagram of overloaded SingleLiveEvent" />
+
 #### Sending events with no active collector
 
 <details>
@@ -71,12 +75,16 @@ the `CREATED` state.
 
 </details>
 
+<img src="images/SingleLiveEvent.webp" width="680" alt="Marble diagram of SingleLiveEvent" />
+
 ### SharedFlow
 
 It is reasonable to assume that `SharedFlow` might be the replacement for `SingleLiveEvent`, just
 like `StateFlow` can fully substitute `LiveData`. And while `SharedFlow` is able to buffer events
 sent in a rapid succession, it falls short when an event is emitted while there are no active
 observers. In such case, the event is simply dropped.
+
+<img src="images/SharedFlow.webp" width="680" alt="Marble diagram of SharedFlow" />
 
 ### Channel
 
