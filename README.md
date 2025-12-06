@@ -4,158 +4,17 @@
 
 # EventBuffer
 
-Conceptually similar to `SingleLiveEvent`, `EventBuffer` delivers events across the
-View–ViewModel boundary.
+`EventBuffer` delivers events across the View–ViewModel boundary, conceptually similar to
+`SingleLiveEvent`.
 
-Unlike `SingleLiveEvent`, however, `EventBuffer` guarantees that each event is consumed **once and
+Unlike `SingleLiveEvent`, it guarantees that each event is consumed **once and
 only once**.
 
 <img src="images/EventBuffer.webp" width="680" alt="Marble diagram of EventBuffer" />
 
-## Issues with SingleLiveEvent
-
-Though `LiveData` is quite reliable as a stream of **states** in the Android world, it cannot
-reliably represent a stream of **events**. To provide this functionality, the `SingleLiveEvent` was
-retrofitted on top of `LiveData`, but this approach is inherently broken.
-
-In contrast to **state**, where we are interested only in the latest value and reading the same
-value multiple times or even zero times is perfectly valid, when it comes to **events** we want each
-value to be consumed once and only once. In other words, we need to ensure that:
-
-* **no event is dropped** (i.e. when there are no active observers or when there are too many emissions at once)
-* **no event is acted on multiple times** (i.e. events should not be replayed after reconnecting an observer)
-
-Extending `SingleLiveEvent` from `LiveData` has one crucial consequence. Since `LiveData` is by
-design conflated, `SingleLiveEvent` also inherits this behavior. As a result, `SingleLiveEvent`
-cannot queue more than one event at a time and this can violate the requirement that each event is
-consumed at least once in two ways:
-
-#### Emitting a burst of events
-
-<details>
-<summary>Details</summary>
-
-When sending multiple events in rapid succession, the event stored in `SingleLiveEvent` might get
-overwritten before the View had a chance to consume it.
-
-This happens only with `postValue()` and can be worked around by using only `setValue()` from the
-Main thread.
-
-When `postValue()` is used, irrespectively of what thread it is invoked from, a `Runnable` callback
-invoking `setValue()` is queued up in the Main thread's `Looper`. This is, however, asynchronous. By
-the time the callback is finally processed, the `SingleLiveEvent`'s value might have already been
-updated again.
-
-> Note: `postValue()` is problematic only in conjunction with `SingleLiveEvent`. It is safe to use
-> it with `LiveData` where this conflating behavior is actually expected.
-
-</details>
-
-<img src="images/SingleLiveEvent-2.webp" width="440" alt="Marble diagram of overloaded SingleLiveEvent" />
-
-#### Sending events with no active collector
-
-<details>
-<summary>Details</summary>
-
-When the collector is stopped (i.e. in the `CREATED`/`DESTROYED` state), sending events will also
-override any undelivered event stored within the `SingleLiveEvent`.
-
-This can happen when *multiple* events trigger during the window when a View is disconnected from
-the ViewModel, either due to
-* configuration change destroy-recreate cycle, or
-* simply because the View is in a stopped state due to it being temporarily replaced by another
-  Activity or Fragment.
-
-This can occasionally happen when the timing aligns so perfectly that multiple events are produced
-during a configuration change.
-
-More commonly it can happen when a Fragment in a ViewPager scrolls off the screen and transitions to
-the `CREATED` state.
-
-</details>
-
-<img src="images/SingleLiveEvent.webp" width="680" alt="Marble diagram of SingleLiveEvent" />
-
-### SharedFlow
-
-It is reasonable to assume that `SharedFlow` might be the replacement for `SingleLiveEvent`, just
-like `StateFlow` can fully substitute `LiveData`. And while `SharedFlow` is able to buffer events
-sent in a rapid succession, it falls short when an event is emitted while there are no active
-observers. In such case, the event is simply dropped.
-
-<img src="images/SharedFlow.webp" width="680" alt="Marble diagram of SharedFlow" />
-
-### Channel
-
-High-level primitives like `SharedFlow` and `StateFlow` are insufficient for our requirements.
-
-* We cannot use `StateFlow` because its implementation is by default conflated.
-* We cannot use `SharedFlow` because events are dropped immediately when there are no observers.
-
-What options do we have when using `Channel` for events?
-
-1) Use non-suspending `trySend` and use `SUSPEND` overflow strategy with a large `capacity` to reduce the chance `trySend` will fail. If we are over the capacity limit, `trySend` will return `false`, and the event will be discarded.
-2) Use non-suspending `trySend` and use `DROP_OLDEST` or `DROP_LATEST` overflow strategy so that `trySend` will have no chance to fail. If we are over the capacity limit, `trySend` will not fail but will overwrite another, not-yet-consumed, event.
-3) Use suspending `send` with `SUSPEND` overflow strategy and propagate the `suspend` modifier upstream.
-4) Use suspending `send` with `SUSPEND` overflow strategy and `launch` a coroutine ourselves and let it suspend.
-
-Option 4) is a no-go since it breaks structured concurrency.
-
-Options 1) and 2) are for our purposes identical because they both lead to losing some of the
-events and only differ in the selection of events to drop.
-
-Option 3) has a slightly different behavior from 1) and 2). When the buffer is full, rather than
-dropping events it will suspend execution instead. Execution will resume again once enough events
-in the buffer get processed.
-
-### Buffering
-
-What is an appropriate size for the buffer?
-
-While a buffer of size 0 provides the most consistent and predictable behavior, this would, however,
-in most cases just unnecessarily hinder performance since every `MutableEventBuffer.send` would
-always suspend until the event is completely processed by the consumer.
-
-On the other hand, an unlimited buffer could lead to memory starvation if events are produced faster
-that the consumer can process for a long period of time.
-
-The `EventBuffer` inherits a buffer size of 64 items from `Channel`. If the buffer grows beyond 64
-unprocessed events, any further calls to `MutableEventBuffer.send` will suspend. This results in a
-sensible balance where in most of the cases we don't need to suspend, but at the same time, the
-number of unprocessed events waiting in the memory is never more than 64 + number of launched
-coroutines. In other words, you should not have memory issues unless you launch thousands of
-coroutines in a loop which all send events into an `EventBuffer`.
-
-### Multicasting
-
-`SharedFlow` supports multicasting natively, but we cannot use it because it drops events
-immediately when there are no observers. `Channel`, however, does not support multicasting and
-events are distributed fairly in a FIFO order between all the collecting coroutines.
-
-Multicasting events to multiple observers is conceptually problematic, especially when we should
-support disconnecting and reconnecting of observers and buffering of events when there are no active
-observers.
-
-To deliver buffered events to all observers, we would need an additional mechanism for explicitly
-starting the delivery of events, akin to what `ConnectableObservable` from RxJava library achieves.
-This greatly complicates the design and was left out.
-
-**Multicasting events across the View–ViewModel boundary is thus discouraged.**
-
-Due to the aforementioned issues, only a single subscriber is allowed to `collect` the `EventBuffer`
-at a time. Any subsequent calls to `collect` while the previous collector is still active will yield
-an `IllegalStateException`.
-
-If you need to deliver a single event to multiple observers, consider creating an `EventBuffer` for
-each observer separately.
-
-See also
-* [[Proposal] Primitive or Channel that guarantees the delivery and processing of items](https://github.com/Kotlin/kotlinx.coroutines/issues/2886)
-* [Sending events to UI.kt](https://gist.github.com/gmk57/330a7d214f5d710811c6b5ce27ceedaa?permalink_comment_id=3639568#gistcomment-3639568)
-
 ## Usage
-Similar to `LiveData` and `MutableLiveData`, `EventBuffer` is a read-only interface and sending
+
+Similar to `LiveData` and `MutableLiveData`, `EventBuffer` is read-only, and sending
 events is only possible through the `MutableEventBuffer` interface.
 
 ```kt
@@ -181,7 +40,7 @@ class MyViewModel : ViewModel() {
 ```
 
 
-Note that in order to guarantee the delivery of events, the `send` method is suspending and
+Note that to guarantee the delivery of events, the `send` method is suspending and
 must be executed from a suspending context.
 
 In Android components with a `Lifecycle`, use the `EventBuffer.collect` extension function to
@@ -202,6 +61,146 @@ class MyFragment : Fragment() {
     }
 }
 ```
+
+## Design
+
+This section outlines the design decisions behind `EventBuffer`.
+
+### Limitations of SingleLiveEvent
+
+Although `LiveData` is reliable as a stream of **state** in the Android world, it cannot reliably
+represent a stream of **events**. To provide this functionality, `SingleLiveEvent` was retrofitted
+on top of `LiveData`, but this approach is inherently flawed.
+
+In contrast to **state**, where we care only about the latest value and reading the same value
+multiple times or none at all is perfectly valid, we want **events** to be consumed once and only
+once. This requires ensuring that:
+
+* **no event is dropped** (e.g., when there are no active observers or when too many events are emitted at once)
+* **no event is consumed multiple times** (e.g., after reconnecting an observer)
+
+Extending `SingleLiveEvent` from `LiveData` has one crucial consequence. Since `LiveData` is by
+design conflated, `SingleLiveEvent` also inherits this behavior. As a result, `SingleLiveEvent`
+cannot queue more than one event at a time and this can violate the requirement that each event is
+consumed at least once in two ways:
+
+#### Burst Event Emissions
+
+<img src="images/SingleLiveEvent-2.webp" width="440" alt="Marble diagram of overloaded SingleLiveEvent" />
+
+<details>
+<summary>Details</summary>
+
+When multiple events are sent in rapid succession, the event stored in `SingleLiveEvent` may be
+overwritten before the View has a chance to consume it.
+
+This happens only with `postValue()` and can be avoided by using `setValue()` exclusively on the
+Main thread.
+
+When `postValue()` is used—regardless of the calling thread—a `Runnable` is enqueued in the Main
+thread's `Looper`, making the update asynchronous. By the time the callback is processed, the value
+may have been updated again, causing one or more events to be lost.
+
+> Note: `postValue()` is problematic only in conjunction with `SingleLiveEvent`. It is safe to use
+> on `LiveData`, where conflation is expected.
+
+</details>
+
+#### Sending Events with No Active Collector
+
+<img src="images/SingleLiveEvent.webp" width="680" alt="Marble diagram of SingleLiveEvent" />
+
+<details>
+<summary>Details</summary>
+
+When the collector is stopped (i.e., in the `CREATED` or `DESTROYED` state), new events will
+overwrite any undelivered event stored in the `SingleLiveEvent`.
+
+This can occur when *multiple* events fire while the View is disconnected from the ViewModel, either
+because of:
+* a configuration change destroy–recreate cycle, or
+* the View entering a stopped state because it has been temporarily replaced by another Activity
+  or Fragment.
+
+This may happen if multiple events occur at just the right moment during a configuration change.
+
+A more common case is when a Fragment in a ViewPager scrolls off-screen and enters the `CREATED`
+state.
+
+</details>
+
+### Limitations of SharedFlow
+
+It is reasonable to assume that `SharedFlow` might serve as a replacement for `SingleLiveEvent`,
+just as `StateFlow` can fully replace `LiveData`. However, while `SharedFlow` can buffer events sent
+in rapid succession, it falls short when an event is emitted while there are no active observers.
+In such cases, the event is simply dropped.
+
+<img src="images/SharedFlow.webp" width="680" alt="Marble diagram of SharedFlow" />
+
+### Channel
+
+High-level primitives like `SharedFlow` and `StateFlow` do not meet the requirements.
+
+* `StateFlow` is conflated by design.
+* `SharedFlow` drops events when no observers are active.
+
+Using `Channel` presents these options:
+
+1) Use non-suspending `trySend` with the `SUSPEND` overflow strategy and a large `capacity` to reduce the chance of failure. If over capacity, `trySend` returns `false` and the event is discarded.
+2) Use non-suspending `trySend` with `DROP_OLDEST` or `DROP_LATEST` so trySend cannot fail; exceeding capacity overwrites an unconsumed event.
+3) Use suspending `send` with `SUSPEND` overflow strategy and `launch` a coroutine manually and letting it suspend.
+4) Use suspending `send` with `SUSPEND` overflow strategy and propagate the `suspend` modifier upstream.
+
+Options 1 and 2 are effectively identical for our purposes: both lose events, differing only in 
+which events are dropped. We cannot use `trySend` at all.
+
+Option 3 is unsuitable because it breaks structured concurrency.
+
+Option 4, which forms the basis of `EventBuffer`, pauses the sender when the buffer is full instead
+of dropping events, ensuring all events are delivered while preserving structured concurrency.
+
+#### Buffering
+
+What is an appropriate buffer size?
+
+A buffer size of 0 is the most consistent and predictable, but it would unnecessarily hinder
+performance, as every `MutableEventBuffer.send` call would suspend until the event is fully
+processed.
+
+An unlimited buffer may lead to memory starvation if events are produced faster than they can be
+consumed over an extended period.
+
+`EventBuffer` inherits a buffer size of 64 from `Channel`. If more than 64 events accumulate,
+any additional `MutableEventBuffer.send` calls will suspend. This provides a sensible balance:
+in most cases, suspension is unnecessary, while the number of unprocessed events in memory never 
+exceeds 64 plus the number of active coroutines. In other words, unless thousands of concurrent
+coroutines send events into the same `EventBuffer`, memory issues are unlikely.
+
+#### Note on multicasting
+
+`SharedFlow` supports multicasting natively, but we cannot use it because it drops events when no
+observers are active. `Channel`, however, does not support multicasting at all, and events are
+distributed fairly in FIFO order among collecting coroutines.
+
+Multicasting events to multiple observers is conceptually problematic, particularly when supporting
+observer disconnection and reconnection, as well as buffering events when no observers are active.
+
+Delivering buffered events to all observers would require an additional mechanism to explicitly 
+start event delivery, similar to what `ConnectableObservable` in the RxJava library provides. This
+would greatly complicate the design, so it was omitted.
+
+**Multicasting events across the View–ViewModel boundary is therefore discouraged.**
+
+Only a single subscriber may call `collect` on an `EventBuffer` at a time. Any additional call while
+a previous collector is still active will throw an `IllegalStateException`.
+
+If a single event must be delivered to multiple observers, create a separate `EventBuffer` for
+each observer.
+
+See also:
+* [[Proposal] Primitive or Channel that guarantees the delivery and processing of items](https://github.com/Kotlin/kotlinx.coroutines/issues/2886)
+* [Sending events to UI.kt](https://gist.github.com/gmk57/330a7d214f5d710811c6b5ce27ceedaa?permalink_comment_id=3639568#gistcomment-3639568)
 
 ## License
 
