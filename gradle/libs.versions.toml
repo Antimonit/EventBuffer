@@ -9,7 +9,7 @@ kover = "0.9.1"
 # https://developer.android.com/jetpack/androidx/releases/arch-core
 androidx-arch-core = "2.2.0"
 # https://developer.android.com/jetpack/androidx/releases/fragment#declaring_dependencies
-androidx-fragment = "1.8.5"
+androidx-fragment = "1.8.9"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle#declaring_dependencies
 androidx-lifecycle = "2.8.7"
 # https://developer.android.com/jetpack/androidx/releases/test#declaring_dependencies
