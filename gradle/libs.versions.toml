@@ -11,7 +11,7 @@ androidx-arch-core = "2.2.0"
 # https://developer.android.com/jetpack/androidx/releases/fragment#declaring_dependencies
 androidx-fragment = "1.8.9"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle#declaring_dependencies
-androidx-lifecycle = "2.8.7"
+androidx-lifecycle = "2.10.0"
 # https://developer.android.com/jetpack/androidx/releases/test#declaring_dependencies
 androidx-test-runner = "1.6.2"
 androidx-test-junit = "1.2.1"

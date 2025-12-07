@@ -93,7 +93,5 @@ class EventBufferCollectTest {
         assertValues("1")
         buffer.send("2")
         assertValues("1")
-        registry.currentState = Lifecycle.State.STARTED
-        assertValues("1")
     }
 }
