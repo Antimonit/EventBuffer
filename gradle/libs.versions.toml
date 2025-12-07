@@ -24,7 +24,7 @@ junit4 = "4.13.2"
 # https://github.com/robfletcher/strikt/releases
 strikt = "0.34.1"
 # https://github.com/cashapp/turbine/releases
-turbine = "1.2.0"
+turbine = "1.2.1"
 
 [libraries]
 plugin-android = { module = "com.android.tools.build:gradle", version.ref = "android" }
