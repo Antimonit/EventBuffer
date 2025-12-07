@@ -4,7 +4,7 @@ android = "8.10.1"
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "2.1.0"
 # https://github.com/Kotlin/kotlinx-kover/releases
-kover = "0.9.1"
+kover = "0.9.3"
 
 # https://developer.android.com/jetpack/androidx/releases/arch-core
 androidx-arch-core = "2.2.0"
