@@ -8,20 +8,20 @@ android {
 
 dependencies {
     api(libs.kotlinx.coroutines.android)
-    api(libs.lifecycle.common)
-    implementation(libs.lifecycle.runtime)
+    api(libs.androidx.lifecycle.common)
+    implementation(libs.androidx.lifecycle.runtime)
 
     testImplementation(projects.internal.test)
     testImplementation(libs.junit4)
     testImplementation(libs.strikt)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.arch.core.testing)
+    testImplementation(libs.androidx.arch.core.testing)
 
     androidTestImplementation(libs.junit4)
-    androidTestImplementation(libs.test.runner)
-    androidTestImplementation(libs.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.strikt)
     androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.lifecycle.livedata)
-    androidTestImplementation(libs.fragment.testing)
+    androidTestImplementation(libs.androidx.lifecycle.livedata)
+    androidTestImplementation(libs.androidx.fragment.testing)
 }
