@@ -2,8 +2,7 @@ package me.khol.gradle.pure
 
 import me.khol.gradle.Const
 import org.gradle.kotlin.dsl.kotlin
-import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
@@ -15,8 +14,8 @@ java {
     targetCompatibility = Const.javaVersion
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = Const.javaVersion.toString()
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(Const.javaVersion.toString()))
     }
 }
