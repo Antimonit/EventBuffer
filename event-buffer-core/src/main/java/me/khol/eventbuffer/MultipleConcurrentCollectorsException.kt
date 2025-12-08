@@ -1,4 +1,4 @@
-package me.khol.arch
+package me.khol.eventbuffer
 
 /**
  * Delivering an event to multiple collectors is problematic and thus not supported.

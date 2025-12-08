@@ -1,4 +1,4 @@
-package me.khol.arch
+package me.khol.eventbuffer
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow

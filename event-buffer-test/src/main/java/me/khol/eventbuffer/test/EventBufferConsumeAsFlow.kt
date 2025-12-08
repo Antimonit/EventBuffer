@@ -1,8 +1,10 @@
-package me.khol.arch
+package me.khol.eventbuffer.test
 
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import me.khol.eventbuffer.EventBuffer
+import me.khol.eventbuffer.MultipleConcurrentCollectorsException
 
 /**
  * This extension is not part of the main source set because the `collector` parameter of

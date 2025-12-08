@@ -1,4 +1,4 @@
-package me.khol.arch.singleliveevent
+package me.khol.eventbuffer.singleliveevent
 
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting

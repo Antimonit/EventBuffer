@@ -1,4 +1,4 @@
-package me.khol.arch
+package me.khol.eventbuffer
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner

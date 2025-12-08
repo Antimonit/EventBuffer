@@ -1,4 +1,4 @@
-package me.khol.arch
+package me.khol.eventbuffer
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle

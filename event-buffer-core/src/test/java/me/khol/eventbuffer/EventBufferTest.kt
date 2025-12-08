@@ -1,4 +1,4 @@
-package me.khol.arch
+package me.khol.eventbuffer
 
 import me.khol.test.MainCoroutineRule
 import kotlinx.coroutines.CancellationException

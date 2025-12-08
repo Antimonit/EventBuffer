@@ -1,4 +1,4 @@
-package me.khol.arch.eventbuffer
+package me.khol.eventbuffer.eventbuffer
 
 import androidx.fragment.app.testing.launchFragment
 import androidx.lifecycle.Lifecycle

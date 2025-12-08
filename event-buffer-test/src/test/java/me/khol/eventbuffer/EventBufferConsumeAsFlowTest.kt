@@ -1,10 +1,11 @@
-package me.khol.arch
+package me.khol.eventbuffer
 
 import app.cash.turbine.test
 import app.cash.turbine.turbineScope
 import me.khol.test.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import me.khol.eventbuffer.test.consumeAsFlow
 import org.junit.Rule
 import org.junit.Test
 import strikt.api.expectThat

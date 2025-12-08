@@ -18,7 +18,7 @@ Similar to `LiveData` and `MutableLiveData`, `EventBuffer` is read-only, and sen
 events is only possible through the `MutableEventBuffer` interface.
 
 ```kt
-import me.khol.arch.*
+import me.khol.eventbuffer.*
 
 class MyViewModel : ViewModel() {
 
@@ -47,7 +47,7 @@ In Android components with a `Lifecycle`, use the `EventBuffer.collect` extensio
 collect events in a lifecycle-aware fashion.
 
 ```kt
-import me.khol.arch.*
+import me.khol.eventbuffer.*
 
 class MyFragment : Fragment() {
 

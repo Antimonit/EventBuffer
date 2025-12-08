@@ -1,4 +1,4 @@
-package me.khol.arch.singleliveevent
+package me.khol.eventbuffer.singleliveevent
 
 import androidx.fragment.app.testing.launchFragment
 import androidx.lifecycle.Lifecycle

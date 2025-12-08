@@ -1,10 +1,10 @@
-package me.khol.arch.eventbuffer
+package me.khol.eventbuffer.eventbuffer
 
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import me.khol.arch.collect
+import me.khol.eventbuffer.collect
 
 class EventBufferFragment : Fragment() {
 

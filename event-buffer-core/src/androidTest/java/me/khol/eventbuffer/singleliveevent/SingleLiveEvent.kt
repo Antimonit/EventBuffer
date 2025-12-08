@@ -1,4 +1,4 @@
-package me.khol.arch.singleliveevent
+package me.khol.eventbuffer.singleliveevent
 
 import android.util.Log
 import androidx.annotation.MainThread

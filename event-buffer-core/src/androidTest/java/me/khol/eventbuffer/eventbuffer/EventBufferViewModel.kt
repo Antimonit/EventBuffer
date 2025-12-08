@@ -1,11 +1,11 @@
-package me.khol.arch.eventbuffer
+package me.khol.eventbuffer.eventbuffer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import me.khol.arch.EventBuffer
-import me.khol.arch.MutableEventBuffer
+import me.khol.eventbuffer.EventBuffer
+import me.khol.eventbuffer.MutableEventBuffer
 
 class EventBufferViewModel : ViewModel() {
 

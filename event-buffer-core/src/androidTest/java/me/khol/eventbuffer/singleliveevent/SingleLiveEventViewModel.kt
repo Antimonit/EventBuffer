@@ -1,4 +1,4 @@
-package me.khol.arch.singleliveevent
+package me.khol.eventbuffer.singleliveevent
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
