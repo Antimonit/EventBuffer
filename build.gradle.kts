@@ -8,5 +8,5 @@ plugins {
 
 dependencies {
     kover(project(":event-buffer-core"))
-    kover(project(":event-buffer-test"))
+    kover(project(":event-buffer-testing"))
 }

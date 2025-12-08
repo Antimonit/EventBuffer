@@ -1,11 +1,12 @@
-package me.khol.eventbuffer
+package me.khol.eventbuffer.testing
 
 import app.cash.turbine.test
 import app.cash.turbine.turbineScope
-import me.khol.test.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import me.khol.eventbuffer.test.consumeAsFlow
+import me.khol.eventbuffer.MultipleConcurrentCollectorsException
+import me.khol.eventbuffer.MutableEventBuffer
+import me.khol.test.MainCoroutineRule
 import org.junit.Rule
 import org.junit.Test
 import strikt.api.expectThat

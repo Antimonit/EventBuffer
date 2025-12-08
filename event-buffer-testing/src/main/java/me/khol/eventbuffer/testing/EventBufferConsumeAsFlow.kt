@@ -1,4 +1,4 @@
-package me.khol.eventbuffer.test
+package me.khol.eventbuffer.testing
 
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow

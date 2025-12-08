@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "me.khol.eventbuffer.test"
+    namespace = "me.khol.eventbuffer.testing"
 }
 
 dependencies {

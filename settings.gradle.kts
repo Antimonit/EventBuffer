@@ -20,5 +20,5 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "EventBuffer"
 
 include(":event-buffer-core")
-include(":event-buffer-test")
+include(":event-buffer-testing")
 include(":internal:test")
