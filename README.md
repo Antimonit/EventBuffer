@@ -1,3 +1,4 @@
+[![Maven Central](https://img.shields.io/maven-central/v/me.khol.eventbuffer/event-buffer.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/me.khol.eventbuffer/event-buffer)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CircleCI](https://img.shields.io/circleci/build/gh/Antimonit/EventBuffer?label=CircleCI)](https://circleci.com/gh/Antimonit/EventBuffer)
 [![codecov](https://codecov.io/gh/Antimonit/EventBuffer/graph/badge.svg?token=XIGVGMYYQT)](https://codecov.io/gh/Antimonit/EventBuffer)
