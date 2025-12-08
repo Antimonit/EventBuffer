@@ -62,6 +62,15 @@ class MyFragment : Fragment() {
 }
 ```
 
+## Download
+
+Add the library from Maven Central:
+
+```kt
+implementation("me.khol.eventbuffer:event-buffer:1.0.0")
+testImplementation("me.khol.eventbuffer:event-buffer-testing:1.0.0")
+```
+
 ## Design
 
 This section outlines the design decisions behind `EventBuffer`.
