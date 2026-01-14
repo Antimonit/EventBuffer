@@ -1,6 +1,7 @@
 package me.khol.gradle.android
 
 import me.khol.gradle.Const
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.library")
@@ -29,8 +30,10 @@ android {
         sourceCompatibility = Const.javaVersion
         targetCompatibility = Const.javaVersion
     }
+}
 
-    kotlinOptions {
-        jvmTarget = Const.javaVersion.toString()
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(Const.javaVersion.toString()))
     }
 }
