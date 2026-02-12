@@ -24,7 +24,7 @@ kotlinx-coroutines = "1.10.2"
 # https://github.com/junit-team/junit4/releases
 junit4 = "4.13.2"
 # https://github.com/robfletcher/strikt/releases
-strikt = "0.34.1"
+strikt = "0.35.1"
 # https://github.com/cashapp/turbine/releases
 turbine = "1.2.1"
 
