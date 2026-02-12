@@ -2,7 +2,7 @@
 # https://mvnrepository.com/artifact/com.android.tools.build/gradle
 android = "8.13.2"
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "2.3.0"
+kotlin = "2.3.10"
 # https://github.com/Kotlin/kotlinx-kover/releases
 kover = "0.9.6"
 # https://github.com/vanniktech/gradle-maven-publish-plugin/releases
