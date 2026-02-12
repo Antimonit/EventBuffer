@@ -6,7 +6,7 @@ kotlin = "2.3.0"
 # https://github.com/Kotlin/kotlinx-kover/releases
 kover = "0.9.6"
 # https://github.com/vanniktech/gradle-maven-publish-plugin/releases
-maven-publish = "0.35.0"
+maven-publish = "0.36.0"
 
 # https://developer.android.com/jetpack/androidx/releases/arch-core
 androidx-arch-core = "2.2.0"
