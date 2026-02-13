@@ -1,6 +1,6 @@
 [versions]
 # https://mvnrepository.com/artifact/com.android.tools.build/gradle
-android = "8.13.2"
+android = "9.0.1"
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "2.3.0"
 # https://github.com/Kotlin/kotlinx-kover/releases
